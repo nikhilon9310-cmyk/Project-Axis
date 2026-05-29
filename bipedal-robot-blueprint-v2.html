@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project AXIS — Cinematic Hybrid Robot Design Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --ink: #0f0f0f;
+  --muted: #6b6457;
+  --accent: #c8391a;
+  --accent2: #1a4fc8;
+  --accent3: #1a8a3a;
+  --surface: #ede8df;
+  --border: #ccc5b5;
+  --grid: rgba(0,0,0,0.04);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 32px; }
+
+/* ── HEADER ── */
+header {
+  border-bottom: 3px solid var(--ink);
+  padding: 64px 0 48px;
+  position: relative;
+  background: var(--bg);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.doc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+  padding: 6px 14px;
+}
+
+.doc-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.8;
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(56px, 10vw, 112px);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+h1 .red { color: var(--accent); }
+
+.tagline {
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--muted);
+  max-width: 560px;
+  margin-top: 16px;
+  border-left: 3px solid var(--accent);
+  padding-left: 16px;
+}
+
+.thesis-box {
+  margin-top: 40px;
+  padding: 20px 24px;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.thesis-box .label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.thesis-box p {
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 48px 0 0;
+  border: 1.5px solid var(--border);
+}
+
+.toc-item {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 16px;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.toc-item:last-child { border-right: none; }
+.toc-item:hover { background: var(--surface); }
+
+.toc-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.toc-name {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ── SECTIONS ── */
+.sections { padding: 64px 0; }
+
+.section {
+  margin-bottom: 4px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.section:hover { border-color: var(--ink); }
+.section.open { border-color: var(--ink); border-width: 2px; }
+
+.sec-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 28px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg);
+}
+
+.sec-header:hover { background: var(--surface); }
+.section.open .sec-header { background: var(--ink); color: var(--bg); }
+
+.sec-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--border);
+  min-width: 36px;
+  transition: color 0.2s;
+}
+
+.section.open .sec-n { color: var(--accent); }
+
+.sec-title-wrap { flex: 1; }
+
+.sec-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.sec-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.section.open .sec-sub { color: rgba(245,240,232,0.5); }
+
+.sec-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+
+.tag-problem { color: var(--accent); }
+.tag-analysis { color: var(--accent2); }
+.tag-design { color: #7a1ac8; }
+.tag-power { color: #c87a1a; }
+.tag-mechanism { color: var(--accent3); }
+.tag-market { color: #1a8a8a; }
+.tag-future { color: var(--muted); }
+
+.section.open .sec-tag { border-color: rgba(245,240,232,0.3); color: rgba(245,240,232,0.6); }
+
+.chevron {
+  font-size: 20px;
+  transition: transform 0.3s;
+  color: var(--muted);
+}
+
+.section.open .chevron { transform: rotate(180deg); color: var(--bg); }
+
+/* Body */
+.sec-body {
+  display: none;
+  padding: 32px 28px;
+  border-top: 1.5px solid var(--border);
+  animation: fadeIn 0.2s ease;
+}
+
+.section.open .sec-body { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+.sec-intro {
+  font-size: 15px;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--border);
+}
+
+/* Points */
+.points { display: grid; gap: 12px; }
+
+.point {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+}
+
+.point-left {
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  border-right: 1px solid var(--border);
+  padding: 16px 0;
+}
+
+.point-right { padding: 16px 20px; }
+
+.point-title {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.point-detail {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Origin story */
+.origin {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.origin-icon { font-size: 24px; min-width: 32px; }
+.origin-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.origin-text { font-size: 14px; color: var(--muted); font-style: italic; }
+.origin-result { font-size: 14px; font-weight: 500; margin-top: 4px; }
+
+/* Comparison table */
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+}
+
+.compare th {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.compare td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.compare tr:nth-child(even) td { background: var(--surface); }
+
+.compare .win { color: var(--accent3); font-weight: 500; }
+.compare .lose { color: var(--accent); }
+.compare .chosen { background: rgba(26,79,200,0.06) !important; }
+.compare .chosen td:first-child { border-left: 3px solid var(--accent2); }
+
+/* Callout boxes */
+.callout {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-left: 4px solid var(--accent);
+  background: rgba(200,57,26,0.05);
+}
+
+.callout.blue { border-color: var(--accent2); background: rgba(26,79,200,0.05); }
+.callout.green { border-color: var(--accent3); background: rgba(26,138,58,0.05); }
+
+.callout-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.callout.blue .callout-label { color: var(--accent2); }
+.callout.green .callout-label { color: var(--accent3); }
+
+.callout p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* System map */
+.sysmap {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  background: var(--ink);
+  color: #a8e6b8;
+  padding: 28px;
+  line-height: 2;
+  overflow-x: auto;
+}
+
+.sysmap .dim { color: #4a5a4f; }
+.sysmap .red { color: #ff6b47; }
+.sysmap .blue { color: #47b8ff; }
+.sysmap .yellow { color: #ffe047; }
+.sysmap .white { color: #f0f0f0; }
+
+/* Decision tree for wheels */
+.dtree {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.dtree-row {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.dtree-row.rejected { opacity: 0.6; }
+.dtree-row.selected { border-color: var(--accent2); background: rgba(26,79,200,0.05); }
+
+.dtree-name { font-weight: 500; }
+.dtree-reason { color: var(--muted); font-style: italic; line-height: 1.5; }
+.dtree-verdict {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.verdict-no { background: rgba(200,57,26,0.1); color: var(--accent); }
+.verdict-yes { background: rgba(26,79,200,0.1); color: var(--accent2); }
+
+/* Mechanism steps */
+.mech-steps { display: grid; gap: 8px; margin: 16px 0; }
+
+.mech-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--border);
+  min-width: 32px;
+}
+
+.step-content {}
+.step-title { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+.step-detail { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* Phase timeline */
+.phases {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+@media (max-width: 600px) { .phases { grid-template-columns: 1fr; } }
+
+.phase {
+  padding: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.phase::after {
+  content: attr(data-n);
+  position: absolute;
+  bottom: -16px;
+  right: -8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  color: rgba(0,0,0,0.04);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.phase-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 8px;
+}
+
+.phase-title {
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.phase ul {
+  list-style: none;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 2;
+}
+
+.phase ul li::before { content: '→ '; color: var(--accent); font-weight: 500; }
+
+/* Market table */
+.market {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+}
+
+.market th {
+  background: var(--surface);
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 400;
+  border-bottom: 2px solid var(--ink);
+  color: var(--muted);
+}
+
+.market td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.market td:last-child { font-weight: 500; color: var(--accent3); }
+
+/* System architecture visual */
+.arch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+@media (max-width: 560px) { .arch { grid-template-columns: 1fr; } }
+
+.arch-module {
+  padding: 20px;
+  border: 1.5px solid var(--border);
+}
+
+.arch-module-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.arch-module ul {
+  list-style: none;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 2;
+}
+
+.arch-module ul li::before { content: '· '; color: var(--ink); font-weight: 700; }
+.arch-module ul li strong { color: var(--ink); font-weight: 500; }
+
+.arch-module.drone { border-color: var(--accent2); }
+.arch-module.drone .arch-module-title { color: var(--accent2); }
+
+.arch-module.body { border-color: var(--accent3); }
+.arch-module.body .arch-module-title { color: var(--accent3); }
+
+.arch-module.power { border-color: #c87a1a; }
+.arch-module.power .arch-module-title { color: #c87a1a; }
+
+.arch-module.logic { border-color: #7a1ac8; }
+.arch-module.logic .arch-module-title { color: #7a1ac8; }
+
+/* Footer */
+footer {
+  border-top: 3px solid var(--ink);
+  padding: 40px 0;
+  margin-top: 0;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+.footer-title span { color: var(--accent); }
+
+.footer-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.8;
+}
+
+.admit-box {
+  margin-top: 32px;
+  padding: 20px 24px;
+  border: 1.5px dashed var(--border);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.admit-icon { font-size: 28px; }
+.admit-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 6px;
+}
+
+.admit-text { font-size: 14px; font-style: italic; color: var(--muted); line-height: 1.6; }
+
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+  <div class="header-top">
+    <span class="doc-label">Design Study · Conceptual Architecture</span>
+    <div class="doc-meta">
+      Version 2.0 — Complete<br>
+      Sections: 8 · Status: Active<br>
+      Classification: Portfolio Document
+    </div>
+  </div>
+
+  <h1>PROJECT<br><span class="red">AXIS</span></h1>
+  <p class="tagline">A Modular Hybrid Locomotion & Cinematic Robotics System — from first observation to complete conceptual architecture.</p>
+
+  <div class="thesis-box">
+    <div class="label">Core Thesis</div>
+    <p>"Robotics will not replace human potential — it will amplify it. AXIS is designed to extend what a film crew can capture, not replace the crew itself."</p>
+  </div>
+
+  <nav class="toc">
+    <a class="toc-item" onclick="openSection(0)"><span class="toc-num">01</span><span class="toc-name">Origin & Problem</span></a>
+    <a class="toc-item" onclick="openSection(1)"><span class="toc-num">02</span><span class="toc-name">Wheel Decision</span></a>
+    <a class="toc-item" onclick="openSection(2)"><span class="toc-num">03</span><span class="toc-name">Structural Design</span></a>
+    <a class="toc-item" onclick="openSection(3)"><span class="toc-num">04</span><span class="toc-name">Drone System</span></a>
+    <a class="toc-item" onclick="openSection(4)"><span class="toc-num">05</span><span class="toc-name">Power & Charging</span></a>
+    <a class="toc-item" onclick="openSection(5)"><span class="toc-num">06</span><span class="toc-name">Battery Swap</span></a>
+    <a class="toc-item" onclick="openSection(6)"><span class="toc-num">07</span><span class="toc-name">Market Case</span></a>
+    <a class="toc-item" onclick="openSection(7)"><span class="toc-num">08</span><span class="toc-name">Full Architecture</span></a>
+  </nav>
+</div>
+</header>
+
+<main class="container">
+<div class="sections">
+
+  <!-- SECTION 1: ORIGIN -->
+  <div class="section open" id="s0">
+    <div class="sec-header" onclick="toggle(0)">
+      <span class="sec-n">01</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Origin Story & Problem Statement</div>
+        <div class="sec-sub">How everyday observations led to a novel engineering concept</div>
+      </div>
+      <span class="sec-tag tag-problem">Problem</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">Every engineering solution begins with a real observation. This section documents the chain of observations that produced AXIS — because the thinking process is as important as the design itself.</p>
+
+      <div class="origin">
+        <div class="origin-icon">🛺</div>
+        <div>
+          <div class="origin-label">Observation 01 · Auto Rickshaw</div>
+          <div class="origin-text">Noticed the 3-wheel configuration on the way to coaching — 1 front wheel, 2 rear wheels. Minimal wheels, maximum stability.</div>
+          <div class="origin-result">→ Solved the wheel geometry problem for the robot's legs</div>
+        </div>
+      </div>
+
+      <div class="origin">
+        <div class="origin-icon">🛼</div>
+        <div>
+          <div class="origin-label">Observation 02 · Roller Skates</div>
+          <div class="origin-text">Recognized that inline skate geometry offers low energy consumption and narrow footprint — perfect for a robot operating in human environments.</div>
+          <div class="origin-result">→ Inspired the hybrid leg + wheel locomotion concept</div>
+        </div>
+      </div>
+
+      <div class="origin">
+        <div class="origin-icon">✈️</div>
+        <div>
+          <div class="origin-label">Observation 03 · Fighter Jet Missile Ejection</div>
+          <div class="origin-text">Observed how jets don't just release missiles — they push them away from the body first to prevent collision. Two-stage: release + eject.</div>
+          <div class="origin-result">→ Directly applied to the autonomous battery ejection mechanism</div>
+        </div>
+      </div>
+
+      <div class="points" style="margin-top:20px;">
+        <div class="point">
+          <div class="point-left">🎯</div>
+          <div class="point-right">
+            <div class="point-title">The Core Problem</div>
+            <div class="point-detail">Current robotic systems are single-mode — wheeled robots fail on rough terrain, bipedal robots are energy-inefficient and hard to balance, aerial drones can't operate at ground level. No single system handles all three environments autonomously.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">💡</div>
+          <div class="point-right">
+            <div class="point-title">The Solution Hypothesis</div>
+            <div class="point-detail">A modular robot that combines hybrid ground locomotion (legs + wheels) with a detachable aerial unit — switching modes based on real-time terrain sensing — can operate continuously across all terrain types.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">🎬</div>
+          <div class="point-right">
+            <div class="point-title">Target Application: Film Production</div>
+            <div class="point-detail">Directors like SS Rajamouli who prioritize real-world shooting over green screen face enormous camera crew costs — cameramen, rigs, insurance, permits. AXIS consolidates ground + aerial cinematography into one autonomous system, reducing crew cost and unlocking new camera angles physically impossible with human operators.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: WHEEL DECISION -->
+  <div class="section" id="s1">
+    <div class="sec-header" onclick="toggle(1)">
+      <span class="sec-n">02</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Wheel Configuration — Decision Analysis</div>
+        <div class="sec-sub">Three options evaluated, one selected with full reasoning</div>
+      </div>
+      <span class="sec-tag tag-analysis">Analysis</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">The wheel geometry of each leg went through three iterations before arriving at the final design. Each rejection was based on specific engineering reasoning.</p>
+
+      <div class="dtree">
+        <div class="dtree-row rejected">
+          <div class="dtree-name">Option A<br><small style="color:var(--muted);font-weight:300">4-wheel car style (2×2)</small></div>
+          <div class="dtree-reason">High energy consumption. Wide footprint defeats the space advantage of using legs instead of wheels. Defeats the entire purpose of the bipedal design.</div>
+          <div class="dtree-verdict verdict-no">Rejected</div>
+        </div>
+        <div class="dtree-row rejected">
+          <div class="dtree-name">Option B<br><small style="color:var(--muted);font-weight:300">Inline (4 wheels, single line)</small></div>
+          <div class="dtree-reason">Energy efficient and narrow — but severe sideways balance problem. Robot tips laterally with any lateral force. Unsafe for a heavy system.</div>
+          <div class="dtree-verdict verdict-no">Rejected</div>
+        </div>
+        <div class="dtree-row selected">
+          <div class="dtree-name">Option C ✓<br><small style="font-weight:300;color:var(--accent2)">Tricycle (1 front + 2 rear)</small></div>
+          <div class="dtree-reason">Inspired by auto-rickshaw geometry. Minimum wheels for maximum stability. Front wheel enables tight turning. Two rear wheels prevent sideways tipping. More energy efficient than Option A. More stable than Option B.</div>
+          <div class="dtree-verdict verdict-yes">Selected</div>
+        </div>
+      </div>
+
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Configuration</th>
+            <th>Stability</th>
+            <th>Energy Use</th>
+            <th>Footprint</th>
+            <th>Turning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>4-wheel (2×2)</td>
+            <td class="win">High</td>
+            <td class="lose">High</td>
+            <td class="lose">Wide</td>
+            <td class="lose">Large radius</td>
+          </tr>
+          <tr>
+            <td>Inline (4 wheels)</td>
+            <td class="lose">Low</td>
+            <td class="win">Low</td>
+            <td class="win">Narrow</td>
+            <td class="win">Small radius</td>
+          </tr>
+          <tr class="chosen">
+            <td><strong>Tricycle (1+2) ✓</strong></td>
+            <td class="win">Good</td>
+            <td class="win">Moderate</td>
+            <td class="win">Narrow</td>
+            <td class="win">Small radius</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout green">
+        <div class="callout-label">Passive Efficiency Bonus</div>
+        <p>The tricycle configuration causes a natural forward lean during movement — identical to how auto-rickshaws lean into motion. This lean assists forward momentum passively, reducing the energy the drive motors need to expend. A free efficiency gain from geometry alone.</p>
+      </div>
+
+      <div class="callout blue" style="margin-top:12px;">
+        <div class="callout-label">Stair Climbing Mode</div>
+        <p>When the terrain sensor detects stairs or rough terrain ahead, all three wheels on each leg lock rigid. The leg joints take over, lifting the robot over the obstacle step by step. Wheel material uses vulcanized rubber (same as vehicle tires) to prevent slipping on edges during the transition.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: STRUCTURAL DESIGN -->
+  <div class="section" id="s2">
+    <div class="sec-header" onclick="toggle(2)">
+      <span class="sec-n">03</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Structural & Mechanical Design</div>
+        <div class="sec-sub">Body architecture, materials, and center-of-mass engineering</div>
+      </div>
+      <span class="sec-tag tag-design">Design</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">Every structural decision in AXIS is driven by one principle: keep the center of mass low and the processing centralized to minimize wiring complexity.</p>
+
+      <div class="points">
+        <div class="point">
+          <div class="point-left">🦴</div>
+          <div class="point-right">
+            <div class="point-title">Leg Architecture</div>
+            <div class="point-detail">Bipedal leg structure with hip, knee, and ankle joints — mirroring human anatomy for maximum terrain adaptability. Each leg terminates in the tricycle wheel assembly (1 front toe wheel + 2 rear heel wheels). Joint actuation via servo motors in Phase 1; upgrade to brushless motors in Phase 2.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">⚖️</div>
+          <div class="point-right">
+            <div class="point-title">Center of Mass Strategy</div>
+            <div class="point-detail">Batteries placed in hips and lower torso — the heaviest components sit as low as possible. Processing units placed in upper chest — centralized to minimize wiring to all limbs and sensors. Head/drone contains only its own dedicated systems. Result: low, stable CoM that resists tipping.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">🧱</div>
+          <div class="point-right">
+            <div class="point-title">Materials — Phased Approach</div>
+            <div class="point-detail"><strong>Phase 1 (Prototype):</strong> Aluminum frame + ABS plastic panels. Reduces cost, sufficient strength for testing. <strong>Phase 2 (Production):</strong> Carbon fiber elements added progressively — starting with the drone head (most weight-sensitive component) and moving to limbs. Carbon fiber is 40% lighter than aluminum at comparable strength.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">🧎</div>
+          <div class="point-right">
+            <div class="point-title">Kneeling Stabilization Protocol</div>
+            <div class="point-detail">Before drone detachment, the body executes a kneeling sequence — lowering CoM, widening stance, and pre-absorbing the liftoff thrust. This is dynamic stability compensation: the robot preemptively adjusts for the weight loss and upward force of drone liftoff rather than reacting to it. Inspired independently; used in military aviation and spacecraft docking systems.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-label">Engineering Honesty — Known Limitation</div>
+        <p>Bipedal locomotion is inherently less energy-efficient than wheeled movement on flat terrain. The wheel-assist mode mitigates this significantly, but the robot will always consume more power than a pure wheeled system on smooth surfaces. This trade-off is intentional — the gain in terrain adaptability justifies the cost.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: DRONE SYSTEM -->
+  <div class="section" id="s3">
+    <div class="sec-header" onclick="toggle(3)">
+      <span class="sec-n">04</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Detachable Drone Head System</div>
+        <div class="sec-sub">Proactive terrain adaptation via modular aerial unit</div>
+      </div>
+      <span class="sec-tag tag-design">Design</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">The drone head is the most original component of AXIS. Unlike systems that react to terrain problems, AXIS anticipates them — and escapes vertically before getting stuck.</p>
+
+      <div class="points">
+        <div class="point">
+          <div class="point-left">📷</div>
+          <div class="point-right">
+            <div class="point-title">Primary Function: Cinematic Camera</div>
+            <div class="point-detail">The drone head carries the main cinema-grade camera. During ground operation it records from a human eye-level perspective. On detachment it transitions to aerial cinematography — all within one continuous shot with no camera swap. This is physically impossible with current film equipment.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">📡</div>
+          <div class="point-right">
+            <div class="point-title">Terrain Anticipation System</div>
+            <div class="point-detail">Chest-mounted camera continuously scans forward terrain. On-board processing classifies terrain type in real time. When unsuitable terrain is detected ahead — crowds, water, rubble, tight corridors — the detachment sequence initiates proactively, before the body reaches the obstacle. This is called proactive terrain adaptation.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">🔋</div>
+          <div class="point-right">
+            <div class="point-title">Drone Self-Sufficiency</div>
+            <div class="point-detail">The drone head is semi-independent: own processor, own battery, own sensors, own propulsion. During docked operation it draws supplemental power from the body. On detachment it operates fully autonomously for approximately 10 minutes before returning for battery swap.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">🤖</div>
+          <div class="point-right">
+            <div class="point-title">Body Behavior During Separation</div>
+            <div class="point-detail">When the drone detaches, the main body does not stop — it enters recovery mode. Using the chest camera for navigation, the body independently finds a path around the obstacle to reunite with the drone on the other side. The system operates as two coordinated robots briefly, then rejoins.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout blue">
+        <div class="callout-label">Why This is Novel</div>
+        <p>Current robotic systems react to terrain — they struggle through obstacles or stop. AXIS anticipates terrain and escapes vertically before encountering it. The concept of splitting into two independent units that later reunite is not present in any current consumer or industrial robot. This is the core intellectual contribution of this design.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: POWER -->
+  <div class="section" id="s4">
+    <div class="sec-header" onclick="toggle(4)">
+      <span class="sec-n">05</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Power Architecture & Energy Management</div>
+        <div class="sec-sub">Dual power system with opportunistic self-charging</div>
+      </div>
+      <span class="sec-tag tag-power">Power</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">AXIS uses a dual-chemistry power system — two different battery technologies for two different types of energy demand — managed by an intelligent energy controller.</p>
+
+      <table class="compare">
+        <thead>
+          <tr><th>Power Source</th><th>Type</th><th>Used For</th><th>Characteristic</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Primary</strong></td>
+            <td>Li-ion batteries</td>
+            <td>Normal locomotion, camera, sensors</td>
+            <td>High energy density, slow discharge</td>
+          </tr>
+          <tr>
+            <td><strong>Burst</strong></td>
+            <td>Supercapacitors</td>
+            <td>Stair climbing, drone liftoff, sudden balance correction</td>
+            <td>Instant high power, charges in seconds</td>
+          </tr>
+          <tr>
+            <td><strong>Drone</strong></td>
+            <td>Dedicated Li-ion</td>
+            <td>Drone flight, camera, propulsion</td>
+            <td>~10 min flight, auto-swap on return</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="points" style="margin-top:16px;">
+        <div class="point">
+          <div class="point-left">⏱️</div>
+          <div class="point-right">
+            <div class="point-title">Revised Battery Life Estimate: ~40 Minutes</div>
+            <div class="point-detail">Roller-assist locomotion significantly reduces motor load vs. pure bipedal walking. Battery in hips + lower torso provides large cell volume. Multiple tasks running simultaneously (terrain scanning, motor control, camera feed, balance correction) are offset by the energy-efficient wheel mode during flat terrain traversal.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">🔌</div>
+          <div class="point-right">
+            <div class="point-title">Opportunistic Self-Charging</div>
+            <div class="point-detail">During idle periods — between takes on a film set, waiting for scene setup — AXIS automatically connects to a charging point and begins recharging. This mirrors the behavior of Amazon Kiva warehouse robots, which independently return to charging stations during low-demand periods. Independently arrived at the same solution.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: BATTERY SWAP -->
+  <div class="section" id="s5">
+    <div class="sec-header" onclick="toggle(5)">
+      <span class="sec-n">06</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Autonomous Battery Hot-Swap Mechanism</div>
+        <div class="sec-sub">Fighter jet-inspired ejection system for zero-downtime drone operation</div>
+      </div>
+      <span class="sec-tag tag-mechanism">Mechanism</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">The battery hot-swap system solves the drone's 10-minute flight limit without any human intervention. Inspired directly by fighter jet missile ejection mechanisms observed independently.</p>
+
+      <div class="mech-steps">
+        <div class="mech-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Low Battery Detection</div>
+            <div class="step-detail">Drone's onboard system monitors battery level continuously. At ~20% charge, an autonomous return signal is triggered. The drone completes its current movement, then navigates back to dock with the main body.</div>
+          </div>
+        </div>
+        <div class="mech-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Drone Docking</div>
+            <div class="step-detail">Drone returns and re-docks on the body. Magnetic alignment guides the drone to the exact docking position. Electrical contacts re-establish connection. Body acknowledges dock — swap sequence initiates.</div>
+          </div>
+        </div>
+        <div class="mech-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Stage 1 — Electromagnetic Release</div>
+            <div class="step-detail">Electromagnetic clamps holding the dead battery release simultaneously. Electrical contacts disconnect. Battery is now held only by the ejection mechanism — not by any active force.</div>
+          </div>
+        </div>
+        <div class="mech-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Stage 2 — Spring-Loaded Directional Ejection</div>
+            <div class="step-detail">Inspired by fighter jet missile ejection: a spring-loaded ejector pushes the dead battery downward and outward in a controlled direction — ensuring it clears all internal components cleanly before falling into a collection tray in the lower torso. Two-stage process prevents jamming.</div>
+          </div>
+        </div>
+        <div class="mech-step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Stage 3 — Fresh Battery Loads</div>
+            <div class="step-detail">Next pre-charged battery advances on an internal rail system into the now-empty slot. Spring-loaded anode/cathode contacts click into place on contact. Electrical connection confirmed. Drone ready to detach within seconds.</div>
+          </div>
+        </div>
+        <div class="mech-step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Dead Battery Charges While Drone Flies</div>
+            <div class="step-detail">The ejected battery in the collection tray is connected to the body's charging circuit and begins recharging immediately. By the time the drone's fresh battery runs low, the previously dead battery is recharged and ready — creating a continuous loop with zero manual intervention.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-label">Calibration Challenge — Acknowledged</div>
+        <p>Spring ejection force must be precisely calibrated: too weak and the battery fails to clear the mechanism; too strong and it risks damaging internal components. This is a key engineering challenge for the physical prototype phase, requiring iterative testing and adjustment of spring tension.</p>
+      </div>
+
+      <div class="callout green" style="margin-top:12px;">
+        <div class="callout-label">Cross-Domain Insight</div>
+        <p>This mechanism was derived by observing fighter jet missile ejection in a YouTube documentary and applying the two-stage release-then-push logic to the battery swap problem. This type of cross-domain engineering — solving one field's problem with another field's solution — is how most breakthrough inventions occur.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: MARKET -->
+  <div class="section" id="s6">
+    <div class="sec-header" onclick="toggle(6)">
+      <span class="sec-n">07</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Market Case & Feasibility</div>
+        <div class="sec-sub">The real-world problem AXIS solves and what it would cost</div>
+      </div>
+      <span class="sec-tag tag-market">Market</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">A design study without a market case is just theory. This section answers: who needs AXIS, what does it save them, and what would building it actually cost?</p>
+
+      <table class="market">
+        <thead>
+          <tr><th>Cost Category</th><th>Current Method</th><th>With AXIS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ground camera operator</td><td>₹15,000–50,000/day</td><td>Eliminated or reduced</td></tr>
+          <tr><td>Aerial drone operator</td><td>₹20,000–80,000/day</td><td>Consolidated into AXIS</td></tr>
+          <tr><td>Camera stabilizer rig</td><td>₹10,000–30,000/day rental</td><td>Built into system</td></tr>
+          <tr><td>Crew insurance</td><td>Significant per person</td><td>Single unit policy</td></tr>
+          <tr><td>Unique camera angles</td><td>Physically limited by human reach</td><td>Unlimited — aerial + ground in one shot</td></tr>
+        </tbody>
+      </table>
+
+      <div class="points" style="margin-top:16px;">
+        <div class="point">
+          <div class="point-left">🎬</div>
+          <div class="point-right">
+            <div class="point-title">Primary Customer: Large-Scale Real-World Productions</div>
+            <div class="point-detail">Directors who prioritize practical filming over green screen — RRR, Baahubali, KGF style productions — spend heavily on camera crews for complex terrain shots. AXIS is designed specifically for shots that currently require both a ground crew and a separate aerial unit, unifying them into one continuous system.</div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-left">🔬</div>
+          <div class="point-right">
+            <div class="point-title">What University Lab Access Enables</div>
+            <div class="point-detail">Phase 1 prototype can be built with consumer components (~₹80,000–1,50,000). Phase 2 — carbon fiber components, precision servo systems, advanced terrain AI — requires access to fabrication labs, motion capture systems, and materials testing equipment available at MIT CSAIL, Penn GRASP Lab, and CMU Robotics Institute. This is exactly why top university labs are the target.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phases" style="margin-top:20px;">
+        <div class="phase" data-n="1">
+          <div class="phase-label">Phase 1 · Class 12</div>
+          <div class="phase-title">Single Leg Prototype</div>
+          <ul>
+            <li>Build one leg with tricycle wheels</li>
+            <li>Test wheel-lock stair climbing</li>
+            <li>Python-controlled servo movement</li>
+            <li>Document everything — photos + video</li>
+          </ul>
+        </div>
+        <div class="phase" data-n="2">
+          <div class="phase-label">Phase 2 · Year 1 University</div>
+          <div class="phase-title">Full Body + Drone Prototype</div>
+          <ul>
+            <li>Complete body with balance system</li>
+            <li>Basic drone detachment mechanism</li>
+            <li>Manual battery swap first</li>
+            <li>Lab fabrication equipment used</li>
+          </ul>
+        </div>
+        <div class="phase" data-n="3">
+          <div class="phase-label">Phase 3 · Year 2–3</div>
+          <div class="phase-title">Autonomous Systems</div>
+          <ul>
+            <li>Terrain prediction AI</li>
+            <li>Autonomous battery hot-swap</li>
+            <li>Drone auto-return and redocking</li>
+            <li>Cinema camera integration</li>
+          </ul>
+        </div>
+        <div class="phase" data-n="4">
+          <div class="phase-label">Phase 4 · Year 4+</div>
+          <div class="phase-title">Market-Ready System</div>
+          <ul>
+            <li>Carbon fiber body components</li>
+            <li>Full film production testing</li>
+            <li>Safety certification process</li>
+            <li>Pilot with production company</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8: FULL ARCHITECTURE -->
+  <div class="section" id="s7">
+    <div class="sec-header" onclick="toggle(7)">
+      <span class="sec-n">08</span>
+      <div class="sec-title-wrap">
+        <div class="sec-title">Complete System Architecture</div>
+        <div class="sec-sub">Full component map of Project AXIS</div>
+      </div>
+      <span class="sec-tag tag-future">Architecture</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">Every design decision from every observation — consolidated into one complete system map.</p>
+
+      <div class="arch">
+        <div class="arch-module drone">
+          <div class="arch-module-title">🚁 Drone Head Unit</div>
+          <ul>
+            <li><strong>Cinema camera</strong> — primary recording</li>
+            <li><strong>Own processor</strong> — autonomous flight</li>
+            <li><strong>Own Li-ion battery</strong> — ~10 min flight</li>
+            <li><strong>Propulsion system</strong> — quadcopter style</li>
+            <li><strong>Magnetic dock contacts</strong> — auto-alignment</li>
+            <li><strong>Carbon fiber body</strong> — Phase 1: aluminum</li>
+          </ul>
+        </div>
+        <div class="arch-module body">
+          <div class="arch-module-title">🤖 Main Body</div>
+          <ul>
+            <li><strong>Bipedal legs</strong> — hip, knee, ankle joints</li>
+            <li><strong>Tricycle wheels</strong> — 1 front + 2 rear per leg</li>
+            <li><strong>Rubber wheel material</strong> — vulcanized, tire-grade</li>
+            <li><strong>Wheel-lock mode</strong> — for stair climbing</li>
+            <li><strong>Chest camera</strong> — terrain scanning + nav</li>
+            <li><strong>Kneeling protocol</strong> — pre-detachment stability</li>
+          </ul>
+        </div>
+        <div class="arch-module power">
+          <div class="arch-module-title">⚡ Power System</div>
+          <ul>
+            <li><strong>Li-ion (hips + lower torso)</strong> — primary power</li>
+            <li><strong>Supercapacitors</strong> — burst power for stairs</li>
+            <li><strong>Opportunistic charging</strong> — auto during idle</li>
+            <li><strong>Battery rail system</strong> — hot-swap storage</li>
+            <li><strong>Ejection mechanism</strong> — fighter jet inspired</li>
+            <li><strong>~40 min runtime</strong> — wheel-assisted estimate</li>
+          </ul>
+        </div>
+        <div class="arch-module logic">
+          <div class="arch-module-title">🧠 Control & Logic</div>
+          <ul>
+            <li><strong>Processing unit</strong> — upper chest, centralized</li>
+            <li><strong>Terrain AI</strong> — chest camera feed analysis</li>
+            <li><strong>Balance control</strong> — IMU + PID controller</li>
+            <li><strong>Gait control</strong> — static gait Phase 1</li>
+            <li><strong>Drone coordination</strong> — detach + reunion logic</li>
+            <li><strong>Python codebase</strong> — sensor fusion + control</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sysmap">
+        <span class="white">PROJECT AXIS — OPERATION FLOW</span><br><br>
+        <span class="dim">┌─ NORMAL OPERATION ──────────────────────────────────┐</span><br>
+        <span class="dim">│</span> Body rolls on tricycle wheels  →  Drone records film <span class="dim">│</span><br>
+        <span class="dim">│</span> Chest camera scans terrain ahead continuously       <span class="dim">│</span><br>
+        <span class="dim">│</span> Li-ion powers movement  +  supercaps on standby      <span class="dim">│</span><br>
+        <span class="dim">└─────────────────────────────────────────────────────┘</span><br><br>
+        <span class="dim">┌─ TERRAIN TRIGGER ───────────────────────────────────┐</span><br>
+        <span class="dim">│</span> <span class="yellow">Obstacle detected ahead by chest camera AI</span>          <span class="dim">│</span><br>
+        <span class="dim">│</span> Body <span class="yellow">kneels down</span>  →  CoM lowered  →  stance widens  <span class="dim">│</span><br>
+        <span class="dim">│</span> Drone receives detach signal                         <span class="dim">│</span><br>
+        <span class="dim">│</span> <span class="blue">Drone lifts off</span>  →  continues filming aerially        <span class="dim">│</span><br>
+        <span class="dim">│</span> Body enters recovery mode  →  finds alternate route  <span class="dim">│</span><br>
+        <span class="dim">│</span> Body + Drone <span class="blue">reunite on other side</span> of obstacle        <span class="dim">│</span><br>
+        <span class="dim">└─────────────────────────────────────────────────────┘</span><br><br>
+        <span class="dim">┌─ BATTERY SWAP CYCLE ────────────────────────────────┐</span><br>
+        <span class="dim">│</span> Drone battery → 20%  →  <span class="red">auto-return signal</span>            <span class="dim">│</span><br>
+        <span class="dim">│</span> Drone docks on body  →  magnetic alignment           <span class="dim">│</span><br>
+        <span class="dim">│</span> EM clamps release  →  <span class="red">spring ejection</span> fires downward  <span class="dim">│</span><br>
+        <span class="dim">│</span> Dead battery → collection tray → begins recharging   <span class="dim">│</span><br>
+        <span class="dim">│</span> Fresh battery slides in on rail  →  contacts lock     <span class="dim">│</span><br>
+        <span class="dim">│</span> <span class="yellow">Drone takes off again</span>  →  zero manual intervention     <span class="dim">│</span><br>
+        <span class="dim">└─────────────────────────────────────────────────────┘</span><br><br>
+        <span class="dim">┌─ STAIR MODE ────────────────────────────────────────┐</span><br>
+        <span class="dim">│</span> Stairs detected  →  all 6 wheels lock rigid          <span class="dim">│</span><br>
+        <span class="dim">│</span> <span class="yellow">Supercapacitors</span> engaged for burst leg power          <span class="dim">│</span><br>
+        <span class="dim">│</span> Leg joints step over each stair  →  wheels re-engage <span class="dim">│</span><br>
+        <span class="dim">└─────────────────────────────────────────────────────┘</span>
+      </div>
+
+      <div class="callout blue" style="margin-top:20px;">
+        <div class="callout-label">For Your College Essay</div>
+        <p>Every component of this system originated from a real observation — an auto-rickshaw, roller skates, a fighter jet video. The design evolved through genuine engineering reasoning, acknowledging trade-offs honestly. The essay writes itself: "I didn't start with a robot. I started with a problem, and let curiosity do the rest."</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-title">PROJECT <span>AXIS</span></div>
+      <div class="footer-note">
+        Design Study v2.0 — Complete Architecture<br>
+        Next step: Diagrams → GitHub → College Portfolio
+      </div>
+    </div>
+
+    <div class="admit-box">
+      <div class="admit-icon">🎓</div>
+      <div>
+        <div class="admit-label">Admissions Note</div>
+        <div class="admit-text">"With access to MIT's CSAIL laboratory or Penn's GRASP Lab, I would prototype Phase 2 of Project AXIS — specifically the drone docking mechanism and terrain prediction system — using their motion capture and fabrication facilities. This design study is the foundation I would bring with me on Day 1." — Use this in your Why Us essays.</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('.section');
+
+  function toggle(i) {
+    const s = document.getElementById('s' + i);
+    const isOpen = s.classList.contains('open');
+    sections.forEach(el => el.classList.remove('open'));
+    if (!isOpen) s.classList.add('open');
+  }
+
+  function openSection(i) {
+    sections.forEach(el => el.classList.remove('open'));
+    const s = document.getElementById('s' + i);
+    s.classList.add('open');
+    setTimeout(() => s.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+</script>
+</body>
+</html>
