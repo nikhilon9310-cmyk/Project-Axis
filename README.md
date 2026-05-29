@@ -13,3 +13,8 @@ Design Study v2.0 — Conceptual Architecture complete.
 
 ## Next Steps
 Diagrams → Python prototype simulations → Physical prototype in university lab.
+
+
+
+© 2025 nikhilon9310-cmyk. All rights reserved.
+This design study is original work. Unauthorized reproduction is prohibited.
